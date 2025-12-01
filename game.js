@@ -1,78 +1,85 @@
-let selectedImg = null;
+const menu = document.getElementById('menu');
+const gameDiv = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const showBtn = document.getElementById('showBtn');
+const canvas = document.getElementById('puzzleCanvas');
+const ctx = canvas.getContext('2d');
+
+let selectedImageSrc = '';
 let pieces = [];
-let preview = false;
 let pieceSize = 100;
 let rows = 5;
 let cols = 8;
+let puzzleImage = new Image();
 
+// Выбор картинки
+document.querySelectorAll('#image-selection img').forEach(img => {
+  img.addEventListener('click', () => {
+    selectedImageSrc = img.dataset.img;
+    document.querySelectorAll('#image-selection img').forEach(i => i.style.border = '2px solid #00fff7');
+    img.style.border = '2px solid #ff00ff';
+  });
+});
 
-function selectImage(el, src) {
-document.querySelectorAll('.images img').forEach(i => i.classList.remove('selected'));
-el.classList.add('selected');
-selectedImg = src;
+// Старт игры
+startBtn.addEventListener('click', () => {
+  if (!selectedImageSrc) return alert('Выберите картинку!');
+  menu.style.display = 'none';
+  gameDiv.style.display = 'block';
+  puzzleImage.src = selectedImageSrc;
+  puzzleImage.onload = () => {
+    canvas.width = puzzleImage.width;
+    canvas.height = puzzleImage.height;
+    createPieces();
+    drawPieces();
+  };
+});
+
+// Создание кусочков
+function createPieces() {
+  pieces = [];
+  const w = puzzleImage.width / cols;
+  const h = puzzleImage.height / rows;
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      pieces.push({
+        x: x * w,
+        y: y * h,
+        correctX: x * w,
+        correctY: y * h,
+        width: w,
+        height: h,
+        currentX: Math.random() * (canvas.width - w),
+        currentY: Math.random() * (canvas.height - h)
+      });
+    }
+  }
 }
 
-
-function startGame() {
-if (!selectedImg) return alert("Выберите картинку!");
-document.getElementById('menu').style.display = 'none';
-document.getElementById('gameArea').style.display = 'block';
-loadPuzzle();
+// Рисуем кусочки
+function drawPieces(showAll=false) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  pieces.forEach(p => {
+    ctx.drawImage(
+      puzzleImage,
+      p.x, p.y, p.width, p.height,
+      showAll ? p.correctX : p.currentX,
+      showAll ? p.correctY : p.currentY,
+      p.width, p.height
+    );
+  });
 }
 
+// Перемешать кусочки
+shuffleBtn.addEventListener('click', () => {
+  pieces.forEach(p => {
+    p.currentX = Math.random() * (canvas.width - p.width);
+    p.currentY = Math.random() * (canvas.height - p.height);
+  });
+  drawPieces();
+});
 
-function loadPuzzle() {
-const img = new Image();
-img.src = selectedImg;
-img.onload = () => {
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-pieces = [];
-const side = document.getElementById('sidePieces');
-side.innerHTML = '';
-for (let r = 0; r < rows; r++) {
-for (let c = 0; c < cols; c++) {
-const pieceCanvas = document.createElement('canvas');
-pieceCanvas.width = pieceSize;
-pieceCanvas.height = pieceSize;
-const pctx = pieceCanvas.getContext('2d');
-pctx.drawImage(img, c * pieceSize, r * pieceSize, pieceSize, pieceSize, 0, 0, pieceSize, pieceSize);
-pieceCanvas.style.cursor = 'grab';
-pieceCanvas.draggable = true;
-pieceCanvas.dataset.row = r;
-pieceCanvas.dataset.col = c;
-pieceCanvas.ondragstart = e => {
-e.dataTransfer.setData('row', r);
-e.dataTransfer.setData('col', c);
-};
-pieces.push(pieceCanvas);
-side.appendChild(pieceCanvas);
-}
-}
-};
-}
-
-
-function shufflePieces() {
-const side = document.getElementById('sidePieces');
-const shuffled = [...pieces].sort(() => Math.random() - 0.5);
-side.innerHTML = '';
-shuffled.forEach(p => side.appendChild(p));
-}
-
-
-function togglePreview() {
-preview = !preview;
-const ctx = document.getElementById('gameCanvas').getContext('2d');
-if (preview) {
-const img = new Image();
-img.src = selectedImg;
-img.onload = () => {
-ctx.globalAlpha = 0.4;
-ctx.drawImage(img, 0, 0, 600, 600);
-ctx.globalAlpha = 1;
-};
-} else {
-ctx.clearRect(0, 0, 600, 600);
-}
-}
+// Показать картинку
+showBtn.addEventListener('mousedown', () => drawPieces(true));
+showBtn.addEventListener('mouseup', () => drawPieces());
