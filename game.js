@@ -96,19 +96,43 @@ document.addEventListener('DOMContentLoaded', () => {
     drawPieces();
   });
 
-  // --- Показать картинку ---
-  showBtn.addEventListener('mousedown', () => drawPieces(true));
-  showBtn.addEventListener('mouseup', () => drawPieces());
+  // --- Показать картинку полупрозрачной ---
+  showBtn.addEventListener('mousedown', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // --- Перетаскивание (мышь и сенсор) ---
+    // прозрачная картинка на фоне
+    ctx.globalAlpha = 0.3;
+    ctx.drawImage(puzzleImage, 0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+
+    drawPieces(); // кусочки поверх
+  });
+
+  showBtn.addEventListener('mouseup', () => {
+    drawPieces(); // возвращаем обычный вид
+  });
+
+  // --- Получение позиции для мыши и сенсора ---
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
-    if (e.touches) {
-      return {x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top};
+    let x, y;
+
+    if (e.touches && e.touches.length > 0) {
+      x = e.touches[0].clientX - rect.left;
+      y = e.touches[0].clientY - rect.top;
+    } else {
+      x = e.clientX - rect.left;
+      y = e.clientY - rect.top;
     }
-    return {x: e.clientX - rect.left, y: e.clientY - rect.top};
+
+    // учитываем масштаб canvas
+    x *= canvas.width / rect.width;
+    y *= canvas.height / rect.height;
+
+    return { x, y };
   }
 
+  // --- Начало перетаскивания ---
   function startDrag(e) {
     const pos = getPos(e);
 
@@ -139,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
   }
 
+  // --- Перемещение перетаскиваемого блока ---
   function moveDrag(e) {
     if (!draggingPiece) return;
     const pos = getPos(e);
@@ -152,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
   }
 
+  // --- Завершение перетаскивания ---
   function endDrag() {
     if (!draggingPiece) return;
 
@@ -175,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     drawPieces();
   }
 
+  // --- События мыши и сенсора ---
   canvas.addEventListener('mousedown', startDrag);
   canvas.addEventListener('mousemove', moveDrag);
   canvas.addEventListener('mouseup', endDrag);
