@@ -19,18 +19,18 @@ body {
 #image-selection {
   display: flex;
   justify-content: center;
-  gap: 15px; /* расстояние между картинками */
-  flex-wrap: wrap; /* перенос на маленьких экранах */
+  gap: 15px;
+  flex-wrap: wrap;
   margin-top: 20px;
 }
 
 #image-selection img {
-  width: 100px; /* компактные картинки */
-  height: auto; /* сохраняем пропорции */
+  width: 100px;
+  height: auto;
   margin: 5px;
   cursor: pointer;
   border: 2px solid #00fff7;
-  border-radius: 8px; /* закругленные углы */
+  border-radius: 8px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -50,7 +50,7 @@ h1 {
 canvas {
   background-color: #111;
   margin-top: 20px;
-  max-width: 100%; /* адаптация под маленький экран */
+  max-width: 100%;
   height: auto;
   border: 2px solid #00fff7;
   border-radius: 8px;
