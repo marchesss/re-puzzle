@@ -1,3 +1,4 @@
+/* Общие стили */
 body {
   background-color: #0a0a0a;
   color: #00fff7;
@@ -9,27 +10,53 @@ body {
   margin: 0;
 }
 
+/* Главное меню и игра */
 #menu, #game {
   text-align: center;
 }
 
+/* Блок выбора картинок */
+#image-selection {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* расстояние между картинками */
+  flex-wrap: wrap; /* перенос на маленьких экранах */
+  margin-top: 20px;
+}
+
 #image-selection img {
-  width: 150px;
-  margin: 10px;
+  width: 100px; /* компактные картинки */
+  height: auto; /* сохраняем пропорции */
+  margin: 5px;
   cursor: pointer;
   border: 2px solid #00fff7;
-  transition: transform 0.2s;
+  border-radius: 8px; /* закругленные углы */
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 #image-selection img:hover {
   transform: scale(1.1);
+  box-shadow: 0 0 15px #00fff7;
 }
 
+/* Заголовок игры */
+h1 {
+  font-size: 48px;
+  text-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7;
+  margin-bottom: 20px;
+}
+
+/* Canvas */
 canvas {
   background-color: #111;
   margin-top: 20px;
+  max-width: 100%; /* адаптация под маленький экран */
+  height: auto;
+  border: 2px solid #00fff7;
+  border-radius: 8px;
 }
 
+/* Кнопки */
 button {
   margin: 10px;
   padding: 10px 20px;
@@ -38,8 +65,16 @@ button {
   color: #000;
   cursor: pointer;
   font-weight: bold;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.2s;
 }
 
 button:hover {
   background: #00ccc7;
+  transform: scale(1.05);
+}
+
+/* Контейнер кнопок управления пазлом */
+.controls {
+  margin-top: 10px;
 }
