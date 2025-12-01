@@ -15,14 +15,16 @@ let puzzleImage = new Image();
 let draggingPiece = null;
 let offsetX = 0;
 let offsetY = 0;
-const snapTolerance = 15; // расстояние для автопритягивания
+const snapTolerance = 15; // дистанция для автопритягивания
 
 // --- Выбор картинки ---
 document.querySelectorAll('#image-selection img').forEach(img => {
   img.addEventListener('click', () => {
-    selectedImageSrc = img.dataset.img;
+    selectedImageSrc = img.dataset.img || img.src; // fallback на src
+    // визуальное выделение выбранной картинки
     document.querySelectorAll('#image-selection img').forEach(i => i.style.border = '2px solid #00fff7');
     img.style.border = '2px solid #ff00ff';
+    console.log('Выбрана картинка:', selectedImageSrc);
   });
 });
 
@@ -96,7 +98,7 @@ shuffleBtn.addEventListener('click', () => {
 showBtn.addEventListener('mousedown', () => drawPieces(true));
 showBtn.addEventListener('mouseup', () => drawPieces());
 
-// --- Работа с мышью (перетаскивание) ---
+// --- Перетаскивание кусочков ---
 canvas.addEventListener('mousedown', (e) => {
   const rect = canvas.getBoundingClientRect();
   const mx = e.clientX - rect.left;
@@ -110,7 +112,7 @@ canvas.addEventListener('mousedown', (e) => {
       draggingPiece = p;
       offsetX = mx - p.currentX;
       offsetY = my - p.currentY;
-      // чтобы перетаскиваемый кусочек рисовался поверх
+      // поднимаем кусочек на передний план
       pieces.push(pieces.splice(i, 1)[0]);
       break;
     }
