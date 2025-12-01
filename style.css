@@ -1,0 +1,72 @@
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #05070d;
+color: #00eaff;
+overflow: hidden;
+}
+.menu {
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+text-align: center;
+}
+h1 {
+font-size: 48px;
+text-shadow: 0 0 20px #00eaff;
+}
+.images {
+display: flex;
+gap: 20px;
+justify-content: center;
+margin-top: 20px;
+}
+.images img {
+width: 120px;
+height: 120px;
+cursor: pointer;
+border: 3px solid transparent;
+transition: 0.3s;
+}
+.images img.selected {
+border-color: #00eaff;
+box-shadow: 0 0 20px #00eaff;
+}
+button {
+margin-top: 30px;
+padding: 12px 25px;
+font-size: 20px;
+cursor: pointer;
+background: black;
+border: 2px solid #00eaff;
+color: #00eaff;
+border-radius: 8px;
+text-shadow: 0 0 10px #00eaff;
+}
+#gameArea { display: none; }
+#gameCanvas {
+position: absolute;
+left: 50%; top: 50%;
+transform: translate(-50%, -50%);
+background: rgba(255,255,255,0.05);
+border: 2px solid #00eaff;
+}
+.sidePieces {
+position: absolute;
+right: 20px;
+top: 50%;
+transform: translateY(-50%);
+width: 200px;
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+}
+.controls {
+position: absolute;
+top: 20px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: 20px;
+}
+.controls button { font-size: 16px; }
