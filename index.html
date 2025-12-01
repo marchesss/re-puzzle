@@ -7,23 +7,24 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="menu">
-    <h1>RE Puzzle</h1>
-    <div id="image-selection">
-      <img src="images/re1.jpg" data-img="images/re1.jpg">
-      <img src="images/re2.jpg" data-img="images/re2.jpg">
-      <img src="images/re3.jpg" data-img="images/re3.jpg">
-    </div>
-    <button id="startBtn">Start Game</button>
-  </div>
 
-  <div id="game" style="display:none;">
-    <canvas id="puzzleCanvas"></canvas>
-    <div class="controls">
-      <button id="shuffleBtn">Shuffle</button>
-      <button id="showBtn">Show Image</button>
-    </div>
+<div id="menu">
+  <h1>RE Puzzle</h1>
+  <div id="image-selection">
+    <img src="images/re1.jpg" data-img="images/re1.jpg" alt="Puzzle 1">
+    <img src="images/re2.jpg" data-img="images/re2.jpg" alt="Puzzle 2">
+    <img src="images/re3.jpg" data-img="images/re3.jpg" alt="Puzzle 3">
   </div>
+  <button id="startBtn">Start Game</button>
+</div>
+
+<div id="game" style="display:none;">
+  <canvas id="puzzleCanvas"></canvas>
+  <div class="controls">
+    <button id="shuffleBtn">Shuffle</button>
+    <button id="showBtn">Show Image</button>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
