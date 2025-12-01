@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     pieces = [];
     const w = puzzleImage.width / cols;
     const h = puzzleImage.height / rows;
-
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         pieces.push({
@@ -101,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Перетаскивание (мышь и сенсор) ---
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
-    if (e.touches) { // мобильные
+    if (e.touches) {
       return {x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top};
     }
     return {x: e.clientX - rect.left, y: e.clientY - rect.top};
