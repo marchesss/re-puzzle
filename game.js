@@ -15,13 +15,12 @@ let puzzleImage = new Image();
 let draggingPiece = null;
 let offsetX = 0;
 let offsetY = 0;
-const snapTolerance = 15; // дистанция для автопритягивания
+const snapTolerance = 15;
 
 // --- Выбор картинки ---
 document.querySelectorAll('#image-selection img').forEach(img => {
   img.addEventListener('click', () => {
-    selectedImageSrc = img.dataset.img || img.src; // fallback на src
-    // визуальное выделение выбранной картинки
+    selectedImageSrc = img.dataset.img || img.src;
     document.querySelectorAll('#image-selection img').forEach(i => i.style.border = '2px solid #00fff7');
     img.style.border = '2px solid #ff00ff';
     console.log('Выбрана картинка:', selectedImageSrc);
@@ -30,6 +29,7 @@ document.querySelectorAll('#image-selection img').forEach(img => {
 
 // --- Старт игры ---
 startBtn.addEventListener('click', () => {
+  console.log('Start нажата, выбранная картинка:', selectedImageSrc);
   if (!selectedImageSrc) {
     alert('Выберите картинку!');
     return;
@@ -112,7 +112,6 @@ canvas.addEventListener('mousedown', (e) => {
       draggingPiece = p;
       offsetX = mx - p.currentX;
       offsetY = my - p.currentY;
-      // поднимаем кусочек на передний план
       pieces.push(pieces.splice(i, 1)[0]);
       break;
     }
@@ -130,7 +129,6 @@ canvas.addEventListener('mousemove', (e) => {
 
 canvas.addEventListener('mouseup', () => {
   if (draggingPiece) {
-    // автопритягивание
     if (Math.abs(draggingPiece.currentX - draggingPiece.correctX) < snapTolerance &&
         Math.abs(draggingPiece.currentY - draggingPiece.correctY) < snapTolerance) {
       draggingPiece.currentX = draggingPiece.correctX;
