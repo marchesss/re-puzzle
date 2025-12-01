@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RE Puzzle</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+<div id="menu" class="menu">
+<h1>(RE) PUZZLE</h1>
+<div class="images">
+<img src="re1.jpg" onclick="selectImage(this, 're1.jpg')">
+<img src="re2.jpg" onclick="selectImage(this, 're2.jpg')">
+<img src="re3.jpg" onclick="selectImage(this, 're3.jpg')">
+</div>
+<button onclick="startGame()">START</button>
+</div>
+
+
+<div id="gameArea">
+<div class="controls">
+<button onclick="shufflePieces()">Перемешать</button>
+<button onclick="togglePreview()">Показать картинку</button>
+</div>
+
+
+<canvas id="gameCanvas" width="600" height="600"></canvas>
+<div class="sidePieces" id="sidePieces"></div>
+</div>
+
+
+<script src="game.js"></script>
+</body>
+</html>
