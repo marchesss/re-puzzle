@@ -11,11 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let pieces = [];
   const rows = 5;
   const cols = 8;
-  const snapTolerance = 50;
+  const snapTolerance = 40; // увеличенное притягивание
   let puzzleImage = new Image();
   let draggingPiece = null;
   let offsetX = 0;
   let offsetY = 0;
+
+  let groups = []; // массив групп скрепленных кусочков
 
   // --- Выбор картинки ---
   const images = document.querySelectorAll('#image-selection img');
@@ -49,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Создание кусочков ---
   function createPieces() {
     pieces = [];
+    groups = [];
     const w = puzzleImage.width / cols;
     const h = puzzleImage.height / rows;
     for (let y = 0; y < rows; y++) {
@@ -108,15 +111,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startDrag(e) {
     const pos = getPos(e);
+
     for (let i = pieces.length - 1; i >= 0; i--) {
       const p = pieces[i];
+
       if (!p.placed &&
           pos.x > p.currentX && pos.x < p.currentX + p.width &&
           pos.y > p.currentY && pos.y < p.currentY + p.height) {
-        draggingPiece = p;
+
+        // проверяем, входит ли кусочек в группу
+        let group = groups.find(g => g.includes(p));
+        if (group) {
+          draggingPiece = group;
+        } else {
+          draggingPiece = [p];
+        }
+
         offsetX = pos.x - p.currentX;
         offsetY = pos.y - p.currentY;
-        pieces.push(pieces.splice(i, 1)[0]);
+
+        draggingPiece.forEach(piece => {
+          pieces.push(pieces.splice(pieces.indexOf(piece), 1)[0]);
+        });
         break;
       }
     }
@@ -126,23 +142,37 @@ document.addEventListener('DOMContentLoaded', () => {
   function moveDrag(e) {
     if (!draggingPiece) return;
     const pos = getPos(e);
-    draggingPiece.currentX = pos.x - offsetX;
-    draggingPiece.currentY = pos.y - offsetY;
+
+    draggingPiece.forEach(p => {
+      p.currentX = pos.x - offsetX + (p.currentX - draggingPiece[0].currentX);
+      p.currentY = pos.y - offsetY + (p.currentY - draggingPiece[0].currentY);
+    });
+
     drawPieces();
     e.preventDefault();
   }
 
   function endDrag() {
-    if (draggingPiece) {
-      if (Math.abs(draggingPiece.currentX - draggingPiece.correctX) < snapTolerance &&
-          Math.abs(draggingPiece.currentY - draggingPiece.correctY) < snapTolerance) {
-        draggingPiece.currentX = draggingPiece.correctX;
-        draggingPiece.currentY = draggingPiece.correctY;
-        draggingPiece.placed = true;
+    if (!draggingPiece) return;
+
+    // проверяем притягивание
+    draggingPiece.forEach(p => {
+      if (Math.abs(p.currentX - p.correctX) < snapTolerance &&
+          Math.abs(p.currentY - p.correctY) < snapTolerance) {
+        p.currentX = p.correctX;
+        p.currentY = p.correctY;
+        p.placed = true;
       }
-      draggingPiece = null;
-      drawPieces();
+    });
+
+    // объединяем кусочки группы, если несколько прилипли
+    const connected = draggingPiece.filter(p => p.placed);
+    if (connected.length > 1 && !groups.includes(connected)) {
+      groups.push(connected);
     }
+
+    draggingPiece = null;
+    drawPieces();
   }
 
   canvas.addEventListener('mousedown', startDrag);
